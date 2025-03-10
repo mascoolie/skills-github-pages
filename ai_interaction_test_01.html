@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Voice Interaction</title>
+</head>
+<body>
+    <h1>AI Voice Assistant</h1>
+    <button onclick="startListening()">Talk to AI</button>
+    <p id="output"></p>
+    <video id="webcam" width="320" height="240" autoplay></video>
+
+    <script>
+        // Speech Recognition
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        function startListening() {
+            recognition.start();
+        }
+
+        recognition.onresult = function(event) {
+            let userInput = event.results[0][0].transcript;
+            document.getElementById("output").innerText = "You said: " + userInput;
+            getAIResponse(userInput);
+        };
+
+        function getAIResponse(input) {
+            // Placeholder for AI response (Replace with OpenAI API call)
+            let aiResponse = "Hello! You said: " + input;
+            speak(aiResponse);
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Webcam Access
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                document.getElementById('webcam').srcObject = stream;
+            })
+            .catch(error => console.error("Webcam access denied", error));
+    </script>
+</body>
+</html>
