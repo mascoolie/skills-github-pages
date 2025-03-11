@@ -12,6 +12,8 @@
     <video id="webcam" width="320" height="240" autoplay></video>
 
     <script>
+        const OPENAI_API_KEY = 'your-openai-api-key-here'; // Replace with your API key
+        
         // Speech Recognition
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.continuous = false;
@@ -28,11 +30,20 @@
             getAIResponse(userInput);
         };
 
-        function getAIResponse(input) {
-            // Placeholder for AI response (Replace with OpenAI API call)
-            let aiResponse = "Hello! You said: " + input;
-            speak(aiResponse);
-        }
+        async function getAIResponse(input) {
+    const response = await fetch("http://localhost:5000/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message: input })
+    });
+    
+    const data = await response.json();
+    let aiResponse = data.reply;
+    document.getElementById("output").innerText += "\nAI: " + aiResponse;
+    speak(aiResponse);
+}
 
         function speak(text) {
             const utterance = new SpeechSynthesisUtterance(text);
@@ -48,3 +59,6 @@
     </script>
 </body>
 </html>
+
+
+"C:\Users\alope\ai-backend\ai-backend\ai-backend\20250310.env"
